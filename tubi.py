@@ -93,14 +93,14 @@ def get_args():
                         help='Hours of EPG to collect. tubi only provides a few hours of EPG. Max allowed is 12.')
     parser.add_argument('--number_as_name', action='store_true', required=False,
                         help='Use the channel number as the name and id. Improves channel display in Plex Media Server.')
-
+    
     # xml arguments
     parser.add_argument('-x', '--xmlFile', type=str, required=False, default='tubi.xml',
                         help='Full destination filepath. Full file path can be specified. If only file name is specified then file will be placed in the current working directory.')
     parser.add_argument('--xml', action='store_true', required=False, help='Generate the xml file.')
     parser.add_argument('--long_date', action='store_true', required=False,
                         help='Use longer date format. Do not use for Plex Media Server.')
-
+    
     # m3u arguments
     parser.add_argument('-m', '--m3uFile', type=str, required=False, default='tubi.m3u',
                         help='Full destination filepath. Full file path can be specified. If only file name is specified then file will be placed in the current working directory.')
@@ -112,15 +112,15 @@ def get_args():
     parser.add_argument('--m3u', action='store_true', required=False, help='Generate the m3u file.')
     parser.add_argument('--streamlink', action='store_true', required=False,
                         help='Generate the stream urls for use with Streamlink.')
-
+    
     opts = parser.parse_args()
-
+    
     # argument fixes
     if opts.epgHours > 12:
         opts.epgHours = 12
-
+    
     opts.language = 'en'
-
+    
     return opts
 
 
@@ -239,22 +239,22 @@ def main():
                 except KeyError:
                     pass
 
-            tvg_logo = channel['images']['thumbnail'][0]
+            tvg_logo = channel['images']['landscape'][0]
             ET.SubElement(xml_channel, "icon", {'src': tvg_logo})
 
             y = 0
             for program in channel['programs']:
                 time_start = isotime_convert(program['start_time'])
                 time_end = isotime_convert(program['end_time'])
-#                time_original_long = isotime_convert(program['episode']['clip']['originalReleaseDate'], short=False)
-#                time_original_short = isotime_convert(program['episode']['clip']['originalReleaseDate'], short=True)
+                # time_original_long = isotime_convert(program['episode']['clip']['originalReleaseDate'], short=False)
+                # time_original_short = isotime_convert(program['episode']['clip']['originalReleaseDate'], short=True)
 
-                try:
-                    first_aired_long = isotime_convert(program['episode']['firstAired'], short=False)
-                    first_aired_short = isotime_convert(program['episode']['firstAired'], short=True)
-                    first_aired = True
-                except KeyError:
-                    first_aired = False
+                # try:
+                #     first_aired_long = isotime_convert(program['episode']['firstAired'], short=False)
+                #     first_aired_short = isotime_convert(program['episode']['firstAired'], short=True)
+                #     first_aired = True
+                # except KeyError:
+                #     first_aired = False
 
                 offset = '+0000'
 
@@ -407,18 +407,18 @@ def main():
             cuid = channel['content_id']
             group_title = f'"tubitv.com",{args.prefix}{channel["title"]}'
 
-#            for image in channel['images']:
-#                if image['type'].lower() == 'poster':
-#                    tvg_logo = image['url']
-#                    break
-            tvg_logo = channel['images']['thumbnail'][0]
+            # for image in channel['images']:
+            #     if image['type'].lower() == 'poster':
+            #         tvg_logo = image['url']
+            #         break
+            tvg_logo = channel['images']['landscape'][0]
             tvg_url = channel['video_resources'][0]['manifest']['url']
 
             m3u_f.write(
                 f'#EXTINF:-1 tvg-ID="{tvg_id}" CUID="{cuid}" tvg-chno="{tvg_chno}" tvg-name="{tvg_name}" tvg-logo="{tvg_logo}" group-title={group_title}\n')
 
-#            if args.streamlink:
-#                m3u_f.write(f"https://pluto.tv/live-tv/{channel['slug']}\n")
+            # if args.streamlink:
+            #     m3u_f.write(f"https://pluto.tv/live-tv/{channel['slug']}\n")
 
             m3u_f.write(f"{tvg_url}\n")
 
