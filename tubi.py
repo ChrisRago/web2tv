@@ -197,7 +197,7 @@ def main():
 
     for channel in grid['rows']:
         if not args.keepNumber:
-            new_number = + x
+            new_number = args.startNumber + x
         else:
             new_number = args.startNumber + channel['number']
 
