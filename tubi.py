@@ -296,6 +296,11 @@ def main():
 #                    ET.SubElement(xml_program, "date").text = time_original
 
                 try:
+                    ET.SubElement(xml_program, "date").text = program['year']
+                except:
+                    pass
+
+                try:
                     if program['episode_title'] != program['tile']:
                         ET.SubElement(xml_program, "sub-title", {'lang': args.language}).text = program['episode_title']
                 except KeyError:
@@ -405,7 +410,7 @@ def main():
 
             tvg_chno = f"{new_number}"
             cuid = channel['content_id']
-            group_title = f'"tubitv.com",{args.prefix}{channel["title"]}'
+            group_title = 'tubitv.com'
 
             # for image in channel['images']:
             #     if image['type'].lower() == 'poster':
