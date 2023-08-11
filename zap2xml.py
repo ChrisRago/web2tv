@@ -111,6 +111,8 @@ def sub_el(parent, name, text=None, **kwargs):
 
 
 def main():
+
+  asset_url = 'https://zap2it.tmsimg.com/assets/'
   cache_dir = pathlib.Path(__file__).parent.joinpath('cache')
   if not cache_dir.is_dir():
     cache_dir.mkdir()
@@ -158,6 +160,11 @@ def main():
             text='%s %s' % (c_in['channelNo'], c_in['callSign']))
         sub_el(c_out, 'display-name', text=c_in['channelNo'])
         sub_el(c_out, 'display-name', text=c_in['callSign'])
+        try:
+          if c_in['thumbnail']:
+            sub_el(c_out, 'icon', attrib={'src': asset_url + c_in['thumbnail']})
+        except KeyError:
+          pass
 
     for c in d['channels']:
       c_id = 'I%s.%s.zap2it.com' % (c['channelNo'], c['channelId'])
@@ -206,11 +213,23 @@ def main():
 
         for f in event['filter']:
           sub_el(prog_out, 'genre', lang='en', text=f[7:])
-
+        
+        try:
+          if event['thumbnail']:
+            sub_el(prog_out, 'icon', attrib={'src': asset_url + event['thumbnail']})
+        except KeyError:
+          pass
+          
   out_path = pathlib.Path(__file__).parent.joinpath('xmltv.xml')
   with open(out_path.absolute(), 'wb') as f:
     f.write(b'<?xml version="1.0" encoding="UTF-8"?>\n')
-    f.write(ET.tostring(out, encoding='UTF-8'))
+    # f.write(ET.tostring(out, encoding='UTF-8'))
+    new_xml = ET.ElementTree(out)
+    try:
+        ET.indent(out, space="\t", level=0)
+    except AttributeError:
+        print('Warning: Upgrade to Python 3.9 to have indented xml')
+    new_xml.write(f, encoding='utf-8')
 
   sys.exit(err)
 
