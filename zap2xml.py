@@ -162,7 +162,7 @@ def main():
         sub_el(c_out, 'display-name', text=c_in['callSign'])
         try:
           if c_in['thumbnail']:
-            sub_el(c_out, 'icon', attrib={'src': asset_url + c_in['thumbnail']})
+            sub_el(c_out, 'icon', attrib={'src': c_in['thumbnail']})
         except KeyError:
           pass
 
@@ -216,7 +216,7 @@ def main():
         
         try:
           if event['thumbnail']:
-            sub_el(prog_out, 'icon', attrib={'src': asset_url + event['thumbnail']})
+            sub_el(prog_out, 'icon', attrib={'src': asset_url + event['thumbnail'] + '.jpg'})
         except KeyError:
           pass
           
