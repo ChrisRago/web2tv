@@ -162,7 +162,7 @@ def main():
         sub_el(c_out, 'display-name', text=c_in['callSign'])
         try:
           if c_in['thumbnail']:
-            sub_el(c_out, 'icon', attrib={'src': c_in['thumbnail']})
+            sub_el(c_out, 'icon', attrib={'src': "https://" + c_in['thumbnail']})
         except KeyError:
           pass
 
